@@ -32,4 +32,11 @@ Sebuah starter project untuk Laravel 10 yang sudah dilengkapi dengan beberapa fi
     - `sonar.host.url`
     - `sonar.login`
     - `sonar.projectKey`
-3. Jalankan binary `sonar-scanner`
+3. Jalankan binary `sonar-scanner` atau, jalankan perintah docker berikut (kecuali **Apple Silicon**):
+    ```bash
+    docker run --rm \
+        --pull=always \
+        -v "$(pwd)":/var/www/html \
+        -it ramageek/image:php8.3-laravel-sonar \
+        sonar-scanner
+    ```
