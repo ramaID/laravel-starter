@@ -1,0 +1,6 @@
+sonar.host.url=https://sonarqube.stack.orb.local
+# sonar.login=
+sonar.projectKey=laravel-10
+
+sonar.sources=app
+sonar.php.coverage.reportPaths=coverage.xml

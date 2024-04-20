@@ -1,0 +1,25 @@
+stages:
+  - quality-check
+
+quality-check:
+  stage: quality-check
+  image:
+    name : ramageek/image:php8.3-laravel
+    entrypoint: [""]
+  cache:
+    paths:
+      - .sonar/cache
+  script:
+    - cp .env.example .env
+    - touch database/database.sqlite
+    - composer install --no-interaction --optimize-autoloader
+    - php artisan key:gen
+    - php artisan migrate --seed
+    - composer qc
+    - cp sonar-project.properties.example sonar-project.properties
+    - sonar-scanner -Dsonar.login=$SONAR_LOGIN_TOKEN
+  only:
+    - main
+  tags:
+    - merapi
+  when: manual
