@@ -23,15 +23,7 @@ jobs:
       - name: Setup SonarQube properties file
         run: cp sonar-project.properties.example sonar-project.properties
 
-      - name: Setup Application and Sonar Scanner
-        env:
-          SONAR_LOGIN_TOKEN: ${{ secrets.SONAR_LOGIN_TOKEN }}
+      - name: Test
         run: |
-          docker-compose exec laravel-sonar-scan bash -c "
-          touch database/database.sqlite &&
-          cp .env.example .env &&
-          composer install --no-interaction --optimize-autoloader &&
-          php artisan key:generate &&
-          php artisan migrate --seed &&
-          composer qc
-          "
+          ls -al
+          which sonar-scanner
