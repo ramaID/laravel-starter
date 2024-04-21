@@ -10,9 +10,8 @@ jobs:
   quality-check:
     runs-on: ubuntu-latest
 
-    services:
-      laravel-sonar-scan:
-        image: ramageek/image:php8.3-laravel-sonar
+    container:
+      image: ramageek/image:php8.3-laravel-sonar
 
     steps:
       - uses: actions/checkout@v2
