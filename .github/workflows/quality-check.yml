@@ -10,6 +10,10 @@ jobs:
   quality-check:
     runs-on: ubuntu-latest
 
+    services:
+      laravel-sonar-scan:
+        image: ramageek/image:php8.3-laravel-sonar
+
     steps:
       - uses: actions/checkout@v2
 
@@ -23,12 +27,11 @@ jobs:
         env:
           SONAR_LOGIN_TOKEN: ${{ secrets.SONAR_LOGIN_TOKEN }}
         run: |
-          docker run -it --rm ramageek/image:php8.3-laravel-sonar:latest bash -c "
-            touch database/database.sqlite &&
-            cp .env.example .env &&
-            composer install --no-interaction --optimize-autoloader &&
-            php artisan key:generate &&
-            php artisan migrate --seed &&
-            composer qc
-            sonar-scanner
+          docker-compose exec laravel-sonar-scan bash -c "
+          touch database/database.sqlite &&
+          cp .env.example .env &&
+          composer install --no-interaction --optimize-autoloader &&
+          php artisan key:generate &&
+          php artisan migrate --seed &&
+          composer qc
           "
