@@ -1,0 +1,34 @@
+name: Quality Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality-check:
+    runs-on: ramageek/image:php8.3-laravel-sonar:latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup environment file
+        run: cp .env.example .env
+
+      - name: Setup SonarQube properties file
+        run: cp sonar-project.properties.example sonar-project.properties
+
+      - name: Setup Application
+        env:
+          SONAR_LOGIN_TOKEN: ${{ secrets.SONAR_LOGIN_TOKEN }}
+        run: |
+          touch database/database.sqlite
+          cp .env.example .env
+          composer install --no-interaction --optimize-autoloader
+          php artisan key:generate
+          php artisan migrate --seed
+          composer qc
+
+      - name: Run sonar-scanner
+        run: sonar-scanner
