@@ -16,13 +16,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup environment file
-        run: cp .env.example .env
-
-      - name: Setup SonarQube properties file
-        run: cp sonar-project.properties.example sonar-project.properties
-
-      - name: Test
+      - name: Setup application with code quality check
         run: |
-          ls -al
-          which sonar-scanner
+          cp .env.example .env
+          touch database/database.sqlite
+          composer install --no-interaction --optimize-autoloader
+          php artisan key:gen
+          php artisan migrate --seed
+          composer qc
+
+      - name: Sonar scanning
+        run: |
+          cp sonar-project.properties.example sonar-project.properties
+          sonar-scanner -Dsonar.login=$SONAR_LOGIN_TOKEN
